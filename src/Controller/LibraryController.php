@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Book;
+use App\Entity\User;
 use App\Form\BookFormType;
 use App\Form\RentFormType;
 use App\Repository\BookRepository;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class LibraryController extends AbstractController
 {
@@ -21,7 +23,8 @@ class LibraryController extends AbstractController
     private BookRepository $bookRepository;
     private UserRepository $userRepository;
 
-    public function __construct(EntityManagerInterface $em, BookRepository $bookRepository, UserRepository $userRepository) {
+    public function __construct(EntityManagerInterface $em, BookRepository $bookRepository, UserRepository $userRepository)
+    {
         $this->em = $em;
         $this->bookRepository = $bookRepository;
         $this->userRepository = $userRepository;
@@ -36,7 +39,7 @@ class LibraryController extends AbstractController
     }
 
     #[Route('/add', name: 'create_book')]
-    public function createBook(Request $request) : Response
+    public function createBook(Request $request): Response
     {
         $book = new Book();
         $form = $this->createForm(BookFormType::class, $book);
@@ -56,15 +59,11 @@ class LibraryController extends AbstractController
     }
 
     #[Route('/rent/{id}', name: 'rent_book')]
-    public function rentBook($id, Request $request) : Response
+    public function rentBook(Book $book, #[CurrentUser] User $user = null, Request $request): Response
     {
-        $book = $this->bookRepository->find($id);
-        $user = $this->getUser();
-
         if (!$book || !$user) {
             return $this->redirectToRoute('app_library');
         }
-        $user = $this->userRepository->find($user->getId());
 
         $form = $this->createForm(RentFormType::class, $book);
 
@@ -84,20 +83,17 @@ class LibraryController extends AbstractController
     }
 
     #[Route('/profile', name: 'profile')]
-    public function profile() : Response
+    public function profile(): Response
     {
         return $this->render('profile.html.twig');
     }
 
     #[Route('/return/{id}', name: 'return_book')]
-    public function returnBook($id) : Response
+    public function returnBook(Book $book, #[CurrentUser] User $user = null): Response
     {
-        $book = $this->bookRepository->find($id);
-        $user = $this->getUser();
         if (!$book || !$user) {
             return $this->redirectToRoute('app_library');
         }
-        $user = $this->userRepository->find($user->getId());
         $book->setQuantity($book->getQuantity() + 1);
         $user->removeBook($book);
         $this->em->flush();
