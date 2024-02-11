@@ -13,5 +13,6 @@ The application runs on `localhost:8000`
 * PHP 8
 * Symfony 7
 * MySQL
+* Doctrine
 * Twig
 * Tailwind CSS
