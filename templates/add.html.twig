@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
-{{ form_start(form) }}
-{{ form_widget(form) }}
-<button type="submit">Create</button>
-{{ form_end(form) }}
+	<div class="container mx-auto flex flex-col items-center p-4">
+		<h2 class="text-2xl p-2">Create new book</h2>
+			{{ form_start(form) }}
+			{{ form_widget(form) }}
+			<button type="submit" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 m-2 rounded text-white min-w-full">Create</button>
+			{{ form_end(form) }}
+	</div>
 
 {% endblock %}

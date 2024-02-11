@@ -13,8 +13,12 @@ class RentFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('save', SubmitType::class, ['label' => 'Yes'])
-        ;
+            ->add('save', SubmitType::class, [
+                'label' => 'Yes',
+                'attr' => [
+                    'class' => 'bg-blue-500 hover:bg-blue-600 rounded text-white px-4 py-2'
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

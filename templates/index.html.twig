@@ -2,19 +2,31 @@
 
 {% block body %}
 
-	<div>
-		{% for book in books %}
-			<li>{{ book.title }}
-				{{ book.author }}
-				{% if app.user %}
-					{% if book.quantity > 0 %}
-						<a href="/rent/{{book.id}}">Rent</a>
-						{% else %}
-                        <span>Out of stock</span>
+	<div class="container mx-auto">
+		<h2 class="text-4xl p-4">Available books</h2>
+		<ul class="font-medium text-lg flex p-2 mt-0 rounded-lg flex-col">
+			{% for book in books %}
+				<li class="p-4 px-7 my-2 rounded-xl bg-blue-200 flex justify-between items-center">
+					<div>
+						<p class="text-xl font-bold my-1">{{ book.title }}</p>
+						<p>{{ book.author }}</p>
+						{% if ( app.user ) and ( "ROLE_ADMIN" in app.user.roles ) %}
+							<p class="text-sm">Quantity:
+								{{ book.quantity }}</p>
+						{% endif %}
+					</div>
+					{% if app.user %}
+						<div class="pr-2 w-40 text-center">
+							{% if book.quantity > 0 %}
+								<a href="/rent/{{book.id}}" class="bg-blue-500 rounded p-4 text-white hover:bg-blue-600">Rent</a>
+							{% else %}
+								<span class="text-red-500 p-2 bg-gray-100 rounded">Out of stock</span>
+							{% endif %}
+						</div>
 					{% endif %}
-				{% endif %}
-			</li>
-		{% endfor %}
+				</li>
+			{% endfor %}
+		</ul>
 	</div>
 
 {% endblock %}
