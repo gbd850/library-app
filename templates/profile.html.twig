@@ -2,6 +2,12 @@
 
 {% block body %}
 
+{% if "ROLE_ADMIN" in app.user.roles %}
+    <div>
+    <a href="/add">Create book</a>
+    </div>
+{% endif %}
+
 <div>
 {% for rentedBook in app.user.books %}
 <li>{{ rentedBook.title }} {{ rentedBook.author }} <a href="/return/{{rentedBook.id}}">Return book</a></li>

@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class LibraryController extends AbstractController
@@ -21,13 +20,11 @@ class LibraryController extends AbstractController
 
     private EntityManagerInterface $em;
     private BookRepository $bookRepository;
-    private UserRepository $userRepository;
 
-    public function __construct(EntityManagerInterface $em, BookRepository $bookRepository, UserRepository $userRepository)
+    public function __construct(EntityManagerInterface $em, BookRepository $bookRepository)
     {
         $this->em = $em;
         $this->bookRepository = $bookRepository;
-        $this->userRepository = $userRepository;
     }
 
     #[Route('/', name: 'app_library', methods: ['GET', 'HEAD'])]
