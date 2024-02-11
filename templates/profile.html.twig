@@ -2,16 +2,21 @@
 
 {% block body %}
 
-{% if "ROLE_ADMIN" in app.user.roles %}
-    <div>
-    <a href="/add">Create book</a>
-    </div>
-{% endif %}
-
-<div>
-{% for rentedBook in app.user.books %}
-<li>{{ rentedBook.title }} {{ rentedBook.author }} <a href="/return/{{rentedBook.id}}">Return book</a></li>
-{% endfor %}
-</div>
+	<div class="container mx-auto">
+		<h2 class="text-4xl p-4">Rented books</h2>
+		<ul class="font-medium text-lg flex p-2 mt-0 rounded-lg flex-col">
+			{% for book in app.user.books %}
+				<li class="p-4 px-7 my-2 rounded-xl bg-blue-200 flex justify-between items-center">
+					<div>
+						<p class="text-xl font-bold my-1">{{ book.title }}</p>
+						<p>{{ book.author }}</p>
+					</div>
+					<div class="pr-2 w-40 text-center">
+						<a href="/return/{{book.id}}" class="bg-red-500 p-2 text-white rounded hover:bg-red-600">Return book</a>
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
 
 {% endblock %}
