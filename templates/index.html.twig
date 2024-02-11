@@ -2,10 +2,19 @@
 
 {% block body %}
 
-<div>
-{% for book in books %}
-<li>{{ book.title }} {{ book.author }} <a href="/rent/{{book.id}}">Rent</a></li>    
-{% endfor %}
-</div>
+	<div>
+		{% for book in books %}
+			<li>{{ book.title }}
+				{{ book.author }}
+				{% if app.user %}
+					{% if book.quantity > 0 %}
+						<a href="/rent/{{book.id}}">Rent</a>
+						{% else %}
+                        <span>Out of stock</span>
+					{% endif %}
+				{% endif %}
+			</li>
+		{% endfor %}
+	</div>
 
 {% endblock %}

@@ -59,12 +59,12 @@ class LibraryController extends AbstractController
     public function rentBook($id, Request $request) : Response
     {
         $book = $this->bookRepository->find($id);
-        $u = $this->getUser();
+        $user = $this->getUser();
 
-        if (!$book || !$u) {
-            exit;
+        if (!$book || !$user) {
+            return $this->redirectToRoute('app_library');
         }
-        $user = $this->userRepository->find($u->getId());
+        $user = $this->userRepository->find($user->getId());
 
         $form = $this->createForm(RentFormType::class, $book);
 
@@ -87,5 +87,20 @@ class LibraryController extends AbstractController
     public function profile() : Response
     {
         return $this->render('profile.html.twig');
+    }
+
+    #[Route('/return/{id}', name: 'return_book')]
+    public function returnBook($id) : Response
+    {
+        $book = $this->bookRepository->find($id);
+        $user = $this->getUser();
+        if (!$book || !$user) {
+            return $this->redirectToRoute('app_library');
+        }
+        $user = $this->userRepository->find($user->getId());
+        $book->setQuantity($book->getQuantity() + 1);
+        $user->removeBook($book);
+        $this->em->flush();
+        return $this->redirectToRoute('app_library');
     }
 }
