@@ -64,7 +64,7 @@ class LibraryController extends AbstractController
         if (!$book || !$u) {
             exit;
         }
-        $user = $this->userRepository->find($u->getUserIdentifier());
+        $user = $this->userRepository->find($u->getId());
 
         $form = $this->createForm(RentFormType::class, $book);
 
