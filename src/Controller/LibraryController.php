@@ -4,22 +4,27 @@ namespace App\Controller;
 
 use App\Entity\Book;
 use App\Form\BookFormType;
+use App\Form\RentFormType;
 use App\Repository\BookRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class LibraryController extends AbstractController
 {
 
     private EntityManagerInterface $em;
     private BookRepository $bookRepository;
+    private UserRepository $userRepository;
 
-    public function __construct(EntityManagerInterface $em, BookRepository $repo) {
+    public function __construct(EntityManagerInterface $em, BookRepository $bookRepository, UserRepository $userRepository) {
         $this->em = $em;
-        $this->bookRepository = $repo;
+        $this->bookRepository = $bookRepository;
+        $this->userRepository = $userRepository;
     }
 
     #[Route('/', name: 'app_library', methods: ['GET', 'HEAD'])]
@@ -48,5 +53,39 @@ class LibraryController extends AbstractController
         return $this->render('add.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/rent/{id}', name: 'rent_book')]
+    public function rentBook($id, Request $request) : Response
+    {
+        $book = $this->bookRepository->find($id);
+        $u = $this->getUser();
+
+        if (!$book || !$u) {
+            exit;
+        }
+        $user = $this->userRepository->find($u->getUserIdentifier());
+
+        $form = $this->createForm(RentFormType::class, $book);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $book->setQuantity($book->getQuantity() - 1);
+            $user->addBook($book);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_library');
+        }
+
+        return $this->render('rent.html.twig', [
+            'form' => $form->createView(),
+            'book' => $book
+        ]);
+    }
+
+    #[Route('/profile', name: 'profile')]
+    public function profile() : Response
+    {
+        return $this->render('profile.html.twig');
     }
 }

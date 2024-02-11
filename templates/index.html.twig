@@ -4,7 +4,7 @@
 
 <div>
 {% for book in books %}
-<li>{{ book.title }} {{ book.author }}</li>    
+<li>{{ book.title }} {{ book.author }} <a href="/rent/{{book.id}}">Rent</a></li>    
 {% endfor %}
 </div>
 
