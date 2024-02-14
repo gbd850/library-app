@@ -5,9 +5,11 @@ namespace App\Tests;
 use App\Entity\Book;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 class BookTest extends KernelTestCase
 {
+    use ResetDatabase;
 
     private EntityManagerInterface $entityManager;
 

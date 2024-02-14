@@ -16,7 +16,8 @@ class LibraryControllerTest extends WebTestCase
         $this->client->disableReboot();
     }
 
-    public function testSomething(): void
+    /** @test */
+    public function whenRequestHomePage_thenStatus200(): void
     {
         $crawler = $this->client->request('GET', '/');
 
