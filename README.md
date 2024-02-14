@@ -16,3 +16,4 @@ The application runs on `localhost:8000`
 * Doctrine
 * Twig
 * Tailwind CSS
+* PHPUnit
